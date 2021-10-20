@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/gob"
 	"fedSharing/mainchain/configs"
+	"fedSharing/mainchain/execCmd"
 	"fedSharing/mainchain/log"
 	"fedSharing/mainchain/utils"
 	"fmt"
@@ -14,7 +15,6 @@ import (
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	mutiaddr "github.com/multiformats/go-multiaddr"
 	"os"
-	"os/exec"
 	"strconv"
 )
 
@@ -90,22 +90,17 @@ func (mcn *MainChainNode) handleGlobalEpoch(payload []byte) {
 	// 本地训练并保存diff与最新本地模型
 	modelSavePath := configs.GlobalConfig.FlConfigViper.GetString("model_path") + "MinerClient_" + strconv.Itoa(configs.ClientID) + "/"
 	diffSavePath := configs.GlobalConfig.FlConfigViper.GetString("diff_path") + "MinerClient_" + strconv.Itoa(configs.ClientID) + "/"
-	commandExec := exec.Command("python", "./python_fl/client.py", "-f", "2",
+	err := execCmd.CmdAndChangeDirToShow("./", "python", []string{"./python_fl/client.py", "-f", "2",
 		"-c", configs.FLConfFilePath,
 		"-m", modelSavePath,
 		"-d", diffSavePath,
 		"-e", strconv.Itoa(gem.GlobalEpoch),
 		"-i", strconv.Itoa(configs.ClientID),
-		)
-	commandExec.Stdout = &bytes.Buffer{}
-	commandExec.Stderr = &bytes.Buffer{}
-	err := commandExec.Run()
-	if err != nil{
+	})
+	if err != nil {
 		log.Logger.Error(err)
-		log.Logger.Error(fmt.Sprintf(commandExec.Stderr.(*bytes.Buffer).String()))
 		return
 	}
-	utils.ColorPrint(commandExec.Stdout.(*bytes.Buffer).String())
 	// 与server建立stream链接
 	mcn.SendEstablishStreamMsg(handleDiffStream, "establish-diff-stream")
 }
@@ -163,34 +158,24 @@ func (mcn *MainChainNode) handleDiffStream(rw *bufio.ReadWriter, clientId int) {
 	<- DiffDeliveryOverChan
 	// 读取之后python聚合
 	modelSavePath := configs.GlobalConfig.FlConfigViper.GetString("model_path") + "PoolManagerServer/"
-	commandExec := exec.Command("python", "./python_fl/server.py", "-f", "2",
+	err := execCmd.CmdAndChangeDirToShow("./", "python", []string{"./python_fl/server.py", "-f", "2",
 		"-c", configs.FLConfFilePath,
 		"-m", modelSavePath,
 		"-d", diffFilePath,
-	)
-	commandExec.Stdout = &bytes.Buffer{}
-	commandExec.Stderr = &bytes.Buffer{}
-	err := commandExec.Run()
-	if err != nil{
+	})
+	if err != nil {
 		log.Logger.Error(err)
-		log.Logger.Error(fmt.Sprintf(commandExec.Stderr.(*bytes.Buffer).String()))
 		return
 	}
-	utils.ColorPrint(commandExec.Stdout.(*bytes.Buffer).String())
 	// 评估效果
-	commandExec = exec.Command("python", "./python_fl/server.py", "-f", "3",
+	err = execCmd.CmdAndChangeDirToShow("./", "python", []string{"./python_fl/server.py", "-f", "3",
 		"-c", configs.FLConfFilePath,
 		"-m", modelSavePath,
-	)
-	commandExec.Stdout = &bytes.Buffer{}
-	commandExec.Stderr = &bytes.Buffer{}
-	err = commandExec.Run()
-	if err != nil{
+	})
+	if err != nil {
 		log.Logger.Error(err)
-		log.Logger.Error(fmt.Sprintf(commandExec.Stderr.(*bytes.Buffer).String()))
 		return
 	}
-	utils.ColorPrint(commandExec.Stdout.(*bytes.Buffer).String())
 	clientsAry := <- WaitEpochChan
 	clientsAry[clientId] = true
 	for clientId, over := range clientsAry {

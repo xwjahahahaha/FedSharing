@@ -1,13 +1,11 @@
 package cmd
 
 import (
-	"bytes"
 	"errors"
 	"fedSharing/mainchain/configs"
+	"fedSharing/mainchain/execCmd"
 	"fedSharing/mainchain/node"
-	"fmt"
 	"github.com/spf13/cobra"
-	"os/exec"
 	"strconv"
 )
 
@@ -19,17 +17,10 @@ var StartPoolManager = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// 初始化server
 		modelSavePath := configs.GlobalConfig.FlConfigViper.GetString("model_path") + "PoolManagerServer/"
-		commandExec := exec.Command("python", "./python_fl/server.py",
-			"-f", "1", "-c", configs.FLConfFilePath, "-m", modelSavePath)
-		commandExec.Stdout = &bytes.Buffer{}
-		commandExec.Stderr = &bytes.Buffer{}
-		err := commandExec.Run()
-		if err != nil{
-			fmt.Println(err)
-			fmt.Println(commandExec.Stderr.(*bytes.Buffer).String())
+		err := execCmd.CmdAndChangeDirToShow("./", "python", []string{"./python_fl/server.py", "-f", "1", "-c", configs.FLConfFilePath, "-m", modelSavePath})
+		if err != nil {
 			return err
 		}
-		fmt.Println(commandExec.Stdout.(*bytes.Buffer).String())
 		// 创建p2p节点
 		hostNode, err := node.NewHostNode(node.PoolManager, 0)
 		if err != nil {
@@ -53,17 +44,10 @@ var StartMiner = &cobra.Command{
 			return errors.New(" Invalid client id. ")
 		}
 		modelSavePath := configs.GlobalConfig.FlConfigViper.GetString("model_path") + "MinerClient_" + strconv.Itoa(configs.ClientID) + "/"
-		commandExec := exec.Command("python", "./python_fl/client.py",
-			"-f", "1", "-c", configs.FLConfFilePath, "-m", modelSavePath)
-		commandExec.Stdout = &bytes.Buffer{}
-		commandExec.Stderr = &bytes.Buffer{}
-		err := commandExec.Run()
-		if err != nil{
-			fmt.Println(err)
-			fmt.Println(commandExec.Stderr.(*bytes.Buffer).String())
+		err := execCmd.CmdAndChangeDirToShow("./", "python", []string{"./python_fl/client.py", "-f", "1", "-c", configs.FLConfFilePath, "-m", modelSavePath})
+		if err != nil {
 			return err
 		}
-		fmt.Println(commandExec.Stdout.(*bytes.Buffer).String())
 		hostNode, err := node.NewHostNode(node.Miner, configs.ClientID)
 		if err != nil {
 			return err

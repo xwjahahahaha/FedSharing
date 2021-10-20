@@ -2,10 +2,12 @@ package node
 
 import (
 	"fedSharing/mainchain/configs"
+	"fedSharing/mainchain/execCmd"
 	"fedSharing/mainchain/log"
 	"fedSharing/mainchain/utils"
 	"fmt"
 	"github.com/libp2p/go-libp2p-core/network"
+	"strings"
 )
 
 var LastConfirm bool
@@ -60,8 +62,17 @@ func (mcn *MainChainNode) SendGlobalEpochMsg(globalEpoch int) {
 			AddrFrom:    mcn.NetWork.self.Pretty(),
 		})...))
 	if globalEpoch == 1 {
-		// TODO 部署合约
-		utils.ColorPrint("Ready to push smart contract.")
+		go func() {
+			utils.ColorPrint("Ready to push smart contract....")
+			// 部署通道智能合约
+			out, err := execCmd.CmdAndChangeDir("./trufflejs/", "truffle", []string{"migration", "--network", "fedsharing"})
+			if err != nil {
+				log.Logger.Error(err)
+				return
+			}
+			utils.ColorPrint(strings.TrimRight(out, "\n"))
+			utils.ColorPrint("Smart contract Deploy completed.")
+		}()
 	}
 }
 

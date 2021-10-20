@@ -2,8 +2,8 @@ const fs = require('fs');
 const iconv = require('iconv-lite');
 const FL_StateChannel = artifacts.require("FL_StateChannel");
 const FSCoin = artifacts.require("FSCoin");
-const flConfigFilePath = "../../configs/fl_conf.json";
-const hostConfigFilePath = "../../configs/host_conf.json";
+const flConfigFilePath = "../configs/fl_conf.json";
+const hostConfigFilePath = "../configs/host_conf.json";
 
 
 module.exports = function(deployer) {
@@ -30,7 +30,8 @@ module.exports = function(deployer) {
             hostJson.service_demander.ether_account, [hostJson.state_channel.expiretion.start, hostJson.state_channel.expiretion.end], { overwrite: true, gas: 9999999, from: hostJson.pool_manager.ether_account, gasPrice: 100000 })
         .then(async() => {
             let fscoinInstance = await FSCoin.deployed();
-            // approve
+            console.log(`new channel address is ${FL_StateChannel.address}.`)
+                // approve
             await fscoinInstance.approve(FL_StateChannel.address, flJson.task.v, { from: hostJson.service_demander.ether_account, gas: 99999, gasPrice: 10000 })
                 .then((res) => { console.log("Service demander success approved, tx is ", res.tx.toString()) }).catch(err => console.log(err));
             await fscoinInstance.approve(FL_StateChannel.address, flJson.task.v, { from: hostJson.pool_manager.ether_account, gas: 99999, gasPrice: 10000 })
@@ -60,7 +61,7 @@ function loadjson(filepath) {
         var jsondata = iconv.decode(fs.readFileSync(filepath, "binary"), "utf8");
         data = JSON.parse(jsondata);
     } catch (err) {
-        console.log(err);
+        console.log("read json file err : ", err);
     }
 
     return data;
@@ -71,6 +72,8 @@ function savejson(filepath, data) {
     if (datastr) {
         try {
             fs.writeFileSync(filepath, datastr);
-        } catch (err) {}
+        } catch (err) {
+            console.log("save json file err : ", err);
+        }
     }
 }

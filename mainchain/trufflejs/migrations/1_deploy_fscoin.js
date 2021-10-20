@@ -2,8 +2,8 @@ const fs = require('fs');
 const iconv = require('iconv-lite');
 const FSCoin = artifacts.require("FSCoin");
 const LibSafeMath = artifacts.require("SafeMath");
-const flConfigFilePath = "../../configs/fl_conf.json";
-const hostConfigFilePath = "../../configs/host_conf.json";
+const flConfigFilePath = "../configs/fl_conf.json";
+const hostConfigFilePath = "../configs/host_conf.json";
 const fscoinOwner = "0x67b690d8B2EDbfBF8172FBA5Cd99C5e69Cd09035"
 const initTotalSupply = 100000000
 const initialBalance = 1000
@@ -83,7 +83,7 @@ function loadjson(filepath) {
         var jsondata = iconv.decode(fs.readFileSync(filepath, "binary"), "utf8");
         data = JSON.parse(jsondata);
     } catch (err) {
-        console.log(err);
+        console.log("read json file err : ", err);
     }
 
     return data;
@@ -94,6 +94,8 @@ function savejson(filepath, data) {
     if (datastr) {
         try {
             fs.writeFileSync(filepath, datastr);
-        } catch (err) {}
+        } catch (err) {
+            console.log("save json file err : ", err);
+        }
     }
 }
