@@ -5,7 +5,7 @@
         "proportion": [7, 1, 2, 2]
     },
     "model_name": "resnet18",
-    "clients_num": 1,
+    "clients_num": 3,
     "type": "cifar",
     "global_epochs": 5,
     "local_epochs": 2,

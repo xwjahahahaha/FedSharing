@@ -1,6 +1,6 @@
 rm -rf ./mainchain
 rm -rf ./python_fl/model/*
 rm -rf ./python_fl/diff/*
-rm -rf ./out/*
+rm -rf ./measure/out/*
 go build -o mainchain ./
 ./mainchain start-pool-manager -c ./configs/fl_conf.json

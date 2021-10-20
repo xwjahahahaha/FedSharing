@@ -1,0 +1,36 @@
+{
+  "diff_time": {
+    "epoch_1": {
+      "client_0": "154.800083ms"
+    },
+    "epoch_2": {
+      "client_0": "169.697458ms"
+    },
+    "epoch_3": {
+      "client_0": "105.308625ms"
+    },
+    "epoch_4": {
+      "client_0": "103.523167ms"
+    },
+    "epoch_5": {
+      "client_0": "98.888833ms"
+    }
+  },
+  "local_train": {
+    "epoch_1": {
+      "client_0": "13.142447292s"
+    },
+    "epoch_2": {
+      "client_0": "10.41292775s"
+    },
+    "epoch_3": {
+      "client_0": "10.033284417s"
+    },
+    "epoch_4": {
+      "client_0": "10.443496084s"
+    },
+    "epoch_5": {
+      "client_0": "11.088432292s"
+    }
+  }
+}

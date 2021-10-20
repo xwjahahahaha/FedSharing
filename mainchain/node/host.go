@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fedSharing/mainchain/configs"
 	log2 "fedSharing/mainchain/log"
+	"fedSharing/mainchain/measure"
 	"fedSharing/mainchain/utils"
 	"fmt"
 	"github.com/libp2p/go-libp2p"
@@ -15,6 +16,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 )
@@ -167,11 +169,11 @@ func (mcn *MainChainNode) StartNodeServer() error {
 	case Miner:
 		fmt.Println("Miner 已经启动...")
 	}
-	WaitingCloseNode(mcn)
+	WaitingCloseNode(mcn, mcn.NodeInfo.Role)
 	return nil
 }
 
-func WaitingCloseNode(mcn *MainChainNode)  {
+func WaitingCloseNode(mcn *MainChainNode, identity Identity)  {
 	// 等待SIGINT或SIGTERM信号
 	ch := make(chan os.Signal, 1)
 	// 当收到ctrl + c时将信号写入通道
@@ -183,6 +185,13 @@ func WaitingCloseNode(mcn *MainChainNode)  {
 	}
 	// 关闭上下文环境
 	mcn.Cancel()
+	// 将测量的数据写入文件
+	switch identity {
+	case PoolManager:
+		measure.WriteMeasureTimeToFile("./measure/out/time_server.json")
+	case Miner:
+		measure.WriteMeasureTimeToFile("./measure/out/time_client_" + strconv.Itoa(configs.ClientID) + ".json")
+	}
 	utils.ColorPrint("Received signal, shutting down...")
 	utils.ColorPrint("ByeBye~")
 }

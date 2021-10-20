@@ -104,7 +104,7 @@ func (mcn *MainChainNode) handleGlobalEpoch(payload []byte) {
 		log.Logger.Error(err)
 		return
 	}
-	measure.MeasureTime("1_local_train_client_" + strconv.Itoa(configs.ClientID) + "_epoch_" + strconv.Itoa(gem.GlobalEpoch), start)
+	measure.MeasureTime("local_train" + ".epoch_" + strconv.Itoa(gem.GlobalEpoch) + ".client_" + strconv.Itoa(configs.ClientID), start)
 	// 与server建立stream链接
 	mcn.SendEstablishStreamMsg(handleDiffStream, "establish-diff-stream")
 }
@@ -172,7 +172,7 @@ func (mcn *MainChainNode) handleDiffStream(rw *bufio.ReadWriter, clientId int) {
 		log.Logger.Error(err)
 		return
 	}
-	measure.MeasureTime("3_server_aggregate_" + "client_" + strconv.Itoa(clientId) + "_epoch_" + strconv.Itoa(GlobalEpoch), start)
+	measure.MeasureTime("server_aggregate" + ".epoch_" + strconv.Itoa(GlobalEpoch) + ".client_" + strconv.Itoa(clientId) , start)
 	// 评估效果
 	start = time.Now()
 	err = execCmd.CmdAndChangeDirToShow("./", "python", []string{"./python_fl/server.py", "-f", "3",
@@ -183,7 +183,7 @@ func (mcn *MainChainNode) handleDiffStream(rw *bufio.ReadWriter, clientId int) {
 		log.Logger.Error(err)
 		return
 	}
-	measure.MeasureTime("4_server_assess_" + "client_" + strconv.Itoa(clientId) + "_epoch_" + strconv.Itoa(GlobalEpoch), start)
+	measure.MeasureTime("server_assess" + ".epoch_" + strconv.Itoa(GlobalEpoch) + ".client_" + strconv.Itoa(clientId) , start)
 	clientsAry := <- WaitEpochChan
 	clientsAry[clientId] = true
 	for clientId, over := range clientsAry {

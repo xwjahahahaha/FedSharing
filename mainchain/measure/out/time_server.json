@@ -1,0 +1,78 @@
+{
+  "send_model": {
+    "epoch_2": {
+      "client_0": "303.57025ms",
+      "client_1": "268.03325ms",
+      "client_2": "269.778833ms"
+    },
+    "epoch_3": {
+      "client_0": "205.607791ms",
+      "client_1": "184.388875ms",
+      "client_2": "149.523583ms"
+    },
+    "epoch_4": {
+      "client_0": "205.590791ms",
+      "client_1": "181.105916ms",
+      "client_2": "156.250833ms"
+    },
+    "epoch_5": {
+      "client_0": "257.639583ms",
+      "client_1": "233.1605ms",
+      "client_2": "156.402208ms"
+    }
+  },
+  "server_aggregate": {
+    "epoch_1": {
+      "client_0": "675.567958ms",
+      "client_1": "1.063061084s",
+      "client_2": "653.04425ms"
+    },
+    "epoch_2": {
+      "client_0": "947.524417ms",
+      "client_1": "646.413459ms",
+      "client_2": "652.40625ms"
+    },
+    "epoch_3": {
+      "client_0": "651.364916ms",
+      "client_1": "655.383042ms",
+      "client_2": "864.383833ms"
+    },
+    "epoch_4": {
+      "client_0": "678.551417ms",
+      "client_1": "654.195709ms",
+      "client_2": "940.921458ms"
+    },
+    "epoch_5": {
+      "client_0": "652.137792ms",
+      "client_1": "886.477ms",
+      "client_2": "668.154875ms"
+    }
+  },
+  "server_assess": {
+    "epoch_1": {
+      "client_0": "2.072902375s",
+      "client_1": "2.14076825s",
+      "client_2": "2.044196292s"
+    },
+    "epoch_2": {
+      "client_0": "2.032415666s",
+      "client_1": "2.007967208s",
+      "client_2": "2.013314583s"
+    },
+    "epoch_3": {
+      "client_0": "2.012228792s",
+      "client_1": "2.009107042s",
+      "client_2": "2.008880417s"
+    },
+    "epoch_4": {
+      "client_0": "2.009259958s",
+      "client_1": "2.014194833s",
+      "client_2": "2.01512225s"
+    },
+    "epoch_5": {
+      "client_0": "2.006235709s",
+      "client_1": "2.006025209s",
+      "client_2": "2.0158605s"
+    }
+  }
+}
