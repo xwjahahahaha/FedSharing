@@ -1,0 +1,26 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*_test.go
+.idea
+.vscode
+*.zip
+
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+database
+node_modules
+mainchain/python_fl/data
+mainchain/python_fl/diff
+mainchain/python_fl/model
+__pycache__

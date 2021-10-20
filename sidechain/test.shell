@@ -1,0 +1,79 @@
+rm -rf ./database/*
+rm -rf ./sbc
+go build -o sbc ./
+./sbc
+A=FS_1kdaB6RoMx4L7C1UzW67Wt3nrJytV8DZA8
+B=FS_1gxZm5eSJtT3pdGjcx8NPv9A4vdGmdx8bU
+C=FS_1Z1YYPeYAWNCrevjTqstSoNEMepZoynPD9
+echo "创建区块链，账户A"
+./sbc crtBC -a ${A}
+echo "A账户余额"
+./sbc getBal ${A}
+echo "A向B转账30元"
+./sbc send ${A} ${B} 30
+
+echo "A : "
+./sbc getBal ${A}
+echo "B : "
+./sbc getBal ${B}
+echo "C : "
+./sbc getBal ${C}
+
+echo "A向C转账20元"
+./sbc send ${A} ${C} 20
+
+echo "A : "
+./sbc getBal ${A}
+echo "B : "
+./sbc getBal ${B}
+echo "C : "
+./sbc getBal ${C}
+
+
+
+
+echo "C向A转账10元"
+./sbc send ${C} ${A} 10
+
+echo "A : "
+./sbc getBal ${A}
+echo "B : "
+./sbc getBal ${B}
+echo "C : "
+./sbc getBal ${C}
+
+echo "C向B转账7元"
+./sbc send ${C} ${B} 7
+
+echo "A : "
+./sbc getBal ${A}
+echo "B : "
+./sbc getBal ${B}
+echo "C : "
+./sbc getBal ${C}
+
+echo "B向C转账15元"
+./sbc send ${B} ${C} 15
+
+echo "A : "
+./sbc getBal ${A}
+echo "B : "
+./sbc getBal ${B}
+echo "C : "
+./sbc getBal ${C}
+
+echo "B向A转账29元"
+./sbc send ${B} ${A} 29
+
+
+echo "余额查询"
+echo "A : "
+./sbc getBal ${A}
+echo "B : "
+./sbc getBal ${B}
+echo "C : "
+./sbc getBal ${C}
+echo "区块链打印"
+./sbc prtBC
+
+

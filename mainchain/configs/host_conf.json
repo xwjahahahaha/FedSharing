@@ -1,0 +1,54 @@
+{
+    "pool_manager": {
+        "ip": "127.0.0.1",
+        "port": 1902,
+        "ether_account": "0x2EECB99aDc8cE04ce4c62529eE5dD13A0787e76F"
+    },
+    "miners": [
+        {
+            "name": "miner_1",
+            "ip": "127.0.0.1",
+            "port": 9901,
+            "ether_account": "0x218Aae3A72ea82509B05A650c5C6158154c0206b"
+        },
+        {
+            "name": "miner_2",
+            "ip": "127.0.0.1",
+            "port": 9902,
+            "ether_account": "0x218Aae3A72ea82509B05A650c5C6158154c0206b"
+        },
+        {
+            "name": "miner_3",
+            "ip": "127.0.0.1",
+            "port": 9903,
+            "ether_account": "0xeF4d6Eb6E1778915282c204aAE859988933a9902"
+        }
+    ],
+    "service_demander": {
+        "ether_account": "0xecdc3dE7A68beE7ffd0B30dDbDE74a0710cd05ab"
+    },
+    "network": {
+        "pubsub": {
+            "topic": "FedSharing_MainNetWork",
+            "id": "FedSharing_MainNetWork"
+        },
+        "mdns": {
+            "discovery_service_tag": "FedSharing_Peers"
+        },
+        "chain_id": "123",
+        "rpc": {
+            "host": "127.0.0.1",
+            "port": 8545
+        },
+        "fscoin_contract": {
+            "address": "0x66D06F5C7b80E46bCfb4d228FeE59d08b0F72428",
+            "total_supply": 100000000
+        }
+    },
+    "state_channel": {
+        "expiretion": {
+            "start": 100,
+            "end": 100000
+        }
+    }
+}

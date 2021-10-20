@@ -1,0 +1,15 @@
+clear
+rm -rf ./database/127.0.0.1:$1
+go build -o sbc ./
+port=$1
+# 创建区块链
+A=FS_1kdaB6RoMx4L7C1UzW67Wt3nrJytV8DZA8
+if [ $2 == 1 ];then
+    echo "创建区块链，账户A"
+    ./sbc crtBC -a ${A} -p ${port}
+else
+    echo "创建空区块链"
+    ./sbc crtBC -p ${port}
+fi
+# 启动节点
+./sbc start -p ${port}
