@@ -13,6 +13,7 @@ type Configs struct {
 	FlConfigViper *viper.Viper
 	HostConfigViper *viper.Viper
 	ModelAccessViper *viper.Viper
+	MeasureTimeViper *viper.Viper
 }
 
 var GlobalConfig = Configs{}
@@ -44,5 +45,6 @@ func (c *Configs) ReadConfigs(path string) error {
 	c.ModelAccessViper = viper.New()
 	c.ModelAccessViper.SetConfigName("model_access")
 	c.ModelAccessViper.SetConfigType("json")
+	c.MeasureTimeViper = viper.New()
 	return nil
 }

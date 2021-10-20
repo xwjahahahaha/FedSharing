@@ -24,3 +24,4 @@ mainchain/python_fl/data
 mainchain/python_fl/diff
 mainchain/python_fl/model
 __pycache__
+measure/out

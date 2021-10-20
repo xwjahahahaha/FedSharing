@@ -8,6 +8,7 @@ import (
 	"fedSharing/mainchain/configs"
 	"fedSharing/mainchain/execCmd"
 	"fedSharing/mainchain/log"
+	"fedSharing/mainchain/measure"
 	"fedSharing/mainchain/utils"
 	"fmt"
 	"github.com/libp2p/go-libp2p-core/peer"
@@ -16,6 +17,7 @@ import (
 	mutiaddr "github.com/multiformats/go-multiaddr"
 	"os"
 	"strconv"
+	"time"
 )
 
 var PoolManagerPeerID string
@@ -87,6 +89,7 @@ func (mcn *MainChainNode) handleGlobalEpoch(payload []byte) {
 		<- ModelDeliveryOverChan
 		// 更新本地模型
 	}
+	start := time.Now()
 	// 本地训练并保存diff与最新本地模型
 	modelSavePath := configs.GlobalConfig.FlConfigViper.GetString("model_path") + "MinerClient_" + strconv.Itoa(configs.ClientID) + "/"
 	diffSavePath := configs.GlobalConfig.FlConfigViper.GetString("diff_path") + "MinerClient_" + strconv.Itoa(configs.ClientID) + "/"
@@ -101,6 +104,7 @@ func (mcn *MainChainNode) handleGlobalEpoch(payload []byte) {
 		log.Logger.Error(err)
 		return
 	}
+	measure.MeasureTime("1_local_train_client_" + strconv.Itoa(configs.ClientID) + "_epoch_" + strconv.Itoa(gem.GlobalEpoch), start)
 	// 与server建立stream链接
 	mcn.SendEstablishStreamMsg(handleDiffStream, "establish-diff-stream")
 }
@@ -157,6 +161,7 @@ func (mcn *MainChainNode) handleDiffStream(rw *bufio.ReadWriter, clientId int) {
 	go readDiffData(rw, diffFilePath)
 	<- DiffDeliveryOverChan
 	// 读取之后python聚合
+	start := time.Now()
 	modelSavePath := configs.GlobalConfig.FlConfigViper.GetString("model_path") + "PoolManagerServer/"
 	err := execCmd.CmdAndChangeDirToShow("./", "python", []string{"./python_fl/server.py", "-f", "2",
 		"-c", configs.FLConfFilePath,
@@ -167,7 +172,9 @@ func (mcn *MainChainNode) handleDiffStream(rw *bufio.ReadWriter, clientId int) {
 		log.Logger.Error(err)
 		return
 	}
+	measure.MeasureTime("3_server_aggregate_" + "client_" + strconv.Itoa(clientId) + "_epoch_" + strconv.Itoa(GlobalEpoch), start)
 	// 评估效果
+	start = time.Now()
 	err = execCmd.CmdAndChangeDirToShow("./", "python", []string{"./python_fl/server.py", "-f", "3",
 		"-c", configs.FLConfFilePath,
 		"-m", modelSavePath,
@@ -176,6 +183,7 @@ func (mcn *MainChainNode) handleDiffStream(rw *bufio.ReadWriter, clientId int) {
 		log.Logger.Error(err)
 		return
 	}
+	measure.MeasureTime("4_server_assess_" + "client_" + strconv.Itoa(clientId) + "_epoch_" + strconv.Itoa(GlobalEpoch), start)
 	clientsAry := <- WaitEpochChan
 	clientsAry[clientId] = true
 	for clientId, over := range clientsAry {

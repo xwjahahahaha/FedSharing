@@ -5,11 +5,13 @@ import (
 	"bytes"
 	"fedSharing/mainchain/configs"
 	"fedSharing/mainchain/log"
+	"fedSharing/mainchain/measure"
 	"fedSharing/mainchain/utils"
 	"github.com/libp2p/go-libp2p-core/network"
 	"io"
 	"os"
 	"strconv"
+	"time"
 )
 
 const StreamFileDeliveryFlag = "@fileOver"
@@ -66,6 +68,7 @@ func readDiffData(rw *bufio.ReadWriter, diffFilePath string) {
 // @Description: Client向流中写入Diff数据
 // @param rw
 func writeDiffData(rw *bufio.ReadWriter, s network.Stream) {
+	start := time.Now()
 	diffFilePath := configs.GlobalConfig.FlConfigViper.GetString("diff_path") +
 		"MinerClient_" +
 		strconv.Itoa(configs.ClientID) + "/" +
@@ -112,10 +115,12 @@ func writeDiffData(rw *bufio.ReadWriter, s network.Stream) {
 		log.Logger.Error(err)
 		return
 	}
+	measure.MeasureTime("2_diff_time_client_" + strconv.Itoa(configs.ClientID) + "_epoch_" + strconv.Itoa(ReceiveGlobalEpoch), start)
 	utils.ColorPrint("Close network stream.")
 }
 
 func writeModelData(rw *bufio.ReadWriter, clientID int) {
+	start := time.Now()
 	modelFilePath := configs.GlobalConfig.FlConfigViper.GetString("model_path") +
 		"MinerClient_" + strconv.Itoa(clientID) + "/" +
 		configs.GlobalConfig.FlConfigViper.GetString("model_name") + ".pth"
@@ -157,6 +162,7 @@ func writeModelData(rw *bufio.ReadWriter, clientID int) {
 			return
 		}
 	}
+	measure.MeasureTime("5_send_model_client_" + strconv.Itoa(clientID) + "_epoch_" + strconv.Itoa(GlobalEpoch), start)
 }
 
 func ReadModelData(rw *bufio.ReadWriter, s network.Stream) {
