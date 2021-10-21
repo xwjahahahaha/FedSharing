@@ -57,7 +57,7 @@ def local_train(conf, local_model, model_save_path, diff_save_path, train_loader
     # 客户端存储差值
     diff_all_path = diff_save_path + "diff_epoch_" + str(epoch) + ".dict"
     if not os.path.exists(diff_save_path):
-        os.mkdir(diff_save_path)
+        os.makedirs(diff_save_path)
     open(diff_all_path, 'wb').write(pickle.dumps(diff))
     print(">>>> Success save model diff to json file: %s" % diff_all_path)
 

@@ -186,6 +186,12 @@ func WaitingCloseNode(mcn *MainChainNode, identity Identity)  {
 	// 关闭上下文环境
 	mcn.Cancel()
 	// 将测量的数据写入文件
+	outRootPath := "./measure/out/"
+	if !utils.DirectoryOrFileExists(outRootPath) {
+		if err := os.Mkdir(outRootPath, os.ModePerm); err != nil {
+			log.Panic(err)
+		}
+	}
 	switch identity {
 	case PoolManager:
 		measure.WriteMeasureTimeToFile("./measure/out/time_server.json")

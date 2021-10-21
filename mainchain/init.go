@@ -3,6 +3,7 @@ package main
 import (
 	cmd "fedSharing/mainchain/cmd"
 	"fedSharing/mainchain/configs"
+	"fedSharing/mainchain/measure"
 	"fmt"
 	"github.com/ipfs/go-log/v2"
 	"os"
@@ -21,6 +22,7 @@ func init() {
 		fmt.Println("SetLogLevel error.")
 		return
 	}
+	initMeasure()
 }
 
 func initCmd()  {
@@ -33,3 +35,19 @@ func initCmd()  {
 	cmd.StartMiner.Flags().IntVarP(&configs.ClientID, "client-id", "i", 0, "客户端编号")
 	cmd.StartMiner.MarkFlagRequired("client-id")
 }
+
+func initMeasure()  {
+	globalEpoch := configs.GlobalConfig.FlConfigViper.GetInt("global_epochs")
+	measure.MeasureStruct = make(map[string][]map[string]int64)
+	measure.MeasureStruct[measure.LOCALTRAIN] = make([]map[string]int64, globalEpoch+1)
+	measure.MeasureStruct[measure.AGGREGATE] = make([]map[string]int64, globalEpoch+1)
+	measure.MeasureStruct[measure.DIFF] = make([]map[string]int64, globalEpoch+1)
+	measure.MeasureStruct[measure.ASSESS] = make([]map[string]int64, globalEpoch+1)
+	measure.MeasureStruct[measure.SENDMODEL] = make([]map[string]int64, globalEpoch+1)
+	for k := range measure.MeasureStruct {
+		for i:= range measure.MeasureStruct[k] {
+			measure.MeasureStruct[k][i] = make(map[string]int64)
+		}
+	}
+}
+

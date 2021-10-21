@@ -115,7 +115,7 @@ func writeDiffData(rw *bufio.ReadWriter, s network.Stream) {
 		log.Logger.Error(err)
 		return
 	}
-	measure.MeasureTime("diff_time" + ".epoch_" + strconv.Itoa(ReceiveGlobalEpoch) + ".client_" +strconv.Itoa(configs.ClientID), start)
+	measure.MeasureTime(measure.DIFF, "client_" +strconv.Itoa(configs.ClientID), ReceiveGlobalEpoch, start)
 	utils.ColorPrint("Close network stream.")
 }
 
@@ -162,7 +162,7 @@ func writeModelData(rw *bufio.ReadWriter, clientID int) {
 			return
 		}
 	}
-	measure.MeasureTime("send_model" + ".epoch_" + strconv.Itoa(GlobalEpoch-1) + ".client_" + strconv.Itoa(clientID), start)
+	measure.MeasureTime(measure.SENDMODEL, "client_" + strconv.Itoa(clientID),  GlobalEpoch-1, start)
 }
 
 func ReadModelData(rw *bufio.ReadWriter, s network.Stream) {

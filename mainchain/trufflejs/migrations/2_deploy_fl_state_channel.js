@@ -27,7 +27,7 @@ module.exports = function(deployer) {
             flJson.task.v,
             flJson.task.proportion,
             minerAddrList,
-            hostJson.service_demander.ether_account, [hostJson.state_channel.expiretion.start, hostJson.state_channel.expiretion.end], { overwrite: true, gas: 9999999, from: hostJson.pool_manager.ether_account, gasPrice: 100000 })
+            hostJson.service_demander.ether_account, [hostJson.state_channel.expiretion.start, hostJson.state_channel.expiretion.end], { overwrite: false, gas: 9999999, from: hostJson.pool_manager.ether_account, gasPrice: 100000 })
         .then(async() => {
             let fscoinInstance = await FSCoin.deployed();
             console.log(`new channel address is ${FL_StateChannel.address}.`)
